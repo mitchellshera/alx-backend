@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 '''module for simple helper'''
 
+
 def index_range(page: int, page_size: int) -> tuple:
     """
     Returns a tuple of start and end indexes for a given page and page size.
