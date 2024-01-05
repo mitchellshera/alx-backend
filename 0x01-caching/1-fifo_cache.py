@@ -1,0 +1,47 @@
+#!/usr/bin/env python3
+""" FIFOCache module
+"""
+
+from base_caching import BaseCaching
+
+
+class FIFOCache(BaseCaching):
+    """ FIFOCache inherits from BaseCaching and is a
+    caching system using FIFO algorithm
+    """
+
+    def __init__(self):
+        """ Initialize FIFOCache
+        """
+        super().__init__()
+
+    def put(self, key, item):
+        """ Add an item to the cache using FIFO algorithm
+        """
+        if key is not None and item is not None:
+            if len(self.cache_data) >= self.MAX_ITEMS:
+                # Discard the first item put in cache (FIFO)
+                discarded_key = next(iter(self.cache_data))
+                del self.cache_data[discarded_key]
+                print("DISCARD: {}".format(discarded_key))
+            self.cache_data[key] = item
+
+    def get(self, key):
+        """ Get an item from the cache by key
+        """
+        if key is not None:
+            return self.cache_data.get(key)
+
+
+if __name__ == "__main__":
+    fifo_cache = FIFOCache()
+
+    fifo_cache.put("key1", "item1")
+    fifo_cache.put("key2", "item2")
+    fifo_cache.put("key3", "item3")
+    fifo_cache.put("key4", "item4")
+
+    print("Item with key 'key1':", fifo_cache.get("key1"))
+    print("Item with key 'key5':", fifo_cache.get("key5"))
+
+    fifo_cache.print_cache()
