@@ -23,13 +23,15 @@ def index_range(page: int, page_size: int) -> tuple:
 
 
 class Server:
-    '''class server'''
+    '''Server class to paginate a database of popular baby names.'''
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
+        '''Initialize the Server class.'''
         self.__dataset = None
 
     def dataset(self) -> List[List]:
+        '''Return the cached dataset.'''
         if self.__dataset is None:
             with open(self.DATA_FILE) as f:
                 reader = csv.reader(f)
@@ -39,7 +41,7 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        '''function for get_page'''
+        '''Return the appropriate page of the dataset based on pagination parameters.'''
         assert isinstance(page, int) and page > 0, \
             "Page must be a positive integer."
         assert isinstance(page_size, int) and page_size > 0, \
@@ -52,27 +54,3 @@ class Server:
             return []
 
         return dataset[start_index:end_index]
-
-
-# Test the function
-if __name__ == "__main__":
-    server = Server()
-
-    try:
-        should_err = server.get_page(-10, 2)
-    except AssertionError:
-        print("AssertionError raised with negative values")
-
-    try:
-        should_err = server.get_page(0, 0)
-    except AssertionError:
-        print("AssertionError raised with 0")
-
-    try:
-        should_err = server.get_page(2, 'Bob')
-    except AssertionError:
-        print("AssertionError raised when page and/or page_size are not ints")
-
-    print(server.get_page(1, 3))
-    print(server.get_page(3, 2))
-    print(server.get_page(3000, 100))
