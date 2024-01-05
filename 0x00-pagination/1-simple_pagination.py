@@ -5,6 +5,7 @@
 import csv
 from typing import List
 
+
 def index_range(page: int, page_size: int) -> tuple:
     """
     Returns a tuple of start and end indexes for a given page and page size.
@@ -20,7 +21,9 @@ def index_range(page: int, page_size: int) -> tuple:
     end_index = page * page_size
     return start_index, end_index
 
+
 class Server:
+    '''class server'''
     DATA_FILE = "Popular_Baby_Names.csv"
 
     def __init__(self):
@@ -36,8 +39,10 @@ class Server:
         return self.__dataset
 
     def get_page(self, page: int = 1, page_size: int = 10) -> List[List]:
-        assert isinstance(page, int) and page > 0, "Page must be a positive integer."
-        assert isinstance(page_size, int) and page_size > 0, "Page size must be a positive integer."
+        assert isinstance(page, int) and page > 0, \
+            "Page must be a positive integer."
+        assert isinstance(page_size, int) and page_size > 0, \
+            "Page size must be a positive integer."
 
         start_index, end_index = index_range(page, page_size)
         dataset = self.dataset()
@@ -46,6 +51,7 @@ class Server:
             return []
 
         return dataset[start_index:end_index]
+
 
 # Test the function
 if __name__ == "__main__":
