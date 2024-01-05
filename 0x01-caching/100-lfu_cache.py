@@ -27,7 +27,7 @@ class LFUCache(BaseCaching):
                                     .items() if v == min_frequency]
 
                 if len(items_to_discard) > 1:
-                    # If more than 1 item to discard, use LRU 
+                    # If more than 1 item to discard, use LRU
                     # algorithm to discard the least recently used
                     lru_key = min(self.frequency, key=lambda
                                   k: self.frequency[k])
