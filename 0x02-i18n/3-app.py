@@ -38,20 +38,17 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-@app.route('/')
-def index():
+@app.route('/', strict_slashes=False)
+def index() -> str:
     """
     Render the index page with parametrized templates.
 
     Returns:
         str: Rendered HTML content.
     """
-    home_title = _('Welcome to Holberton')
-    home_header = _('Hello world!')
 
-    return render_template('3-index.html',
-                           home_title=home_title, home_header=home_header)
+    return render_template('3-index.html')
 
 
 if __name__ == '__main__':
-    app.run()
+    app.run(port="5000", host="0.0.0.0", debug=True)
