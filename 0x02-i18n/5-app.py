@@ -7,10 +7,12 @@ language selection, parametrized templates, and user login emulation.
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
 
-app = Flask(__name__)
-
-# Instantiate Babel object
-babel = Babel(app)
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
 
 
 class Config:
@@ -22,17 +24,9 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-# Use Config as config for the Flask app
+app = Flask(__name__)
 app.config.from_object(Config)
-
-
-# Mock user database
-users = {
-    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
-    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
-    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
-    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
-}
+babel = Babel(app)
 
 
 @babel.localeselector
@@ -50,7 +44,7 @@ def get_locale():
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
-def get_user(user_id):
+def get_user():
     """
     Get user details based on user ID.
 
@@ -60,8 +54,10 @@ def get_user(user_id):
     Returns:
         dict: User details or None if not found.
     """
-    return users.get(user_id)
-
+    id = request.args.get('login_as', None)
+    if id is not None and int(id) in users.keys():
+        return users.get(int(id))
+    return None
 
 @app.before_request
 def before_request():
@@ -69,8 +65,8 @@ def before_request():
     Executed before all other functions.
     Find a user using get_user and set it as a global on flask.g.user.
     """
-    user_id = request.args.get('login_as')
-    g.user = get_user(int(user_id)) if user_id else None
+    user = get_user()
+    g.user = user
 
 
 @app.route('/', strict_slashes=False)
