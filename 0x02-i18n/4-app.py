@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """
 This module contains a Flask app with Flask-Babel integration,
-language selection, parametrized templates, and support for forcing a particular locale.
+language selection, parametrized templates,
+and support for forcing a particular locale.
 """
 
 from flask import Flask, render_template, request
