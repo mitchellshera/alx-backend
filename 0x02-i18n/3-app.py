@@ -4,14 +4,8 @@ This module contains a Flask app with Flask-Babel integration,
 language selection, and parametrized templates.
 """
 
-from flask import Flask, render_template, request, g
-from flask_babel import Babel, _
-
-
-app = Flask(__name__)
-
-# Instantiate Babel object
-babel = Babel(app)
+from flask import Flask, render_template, request
+from flask_babel import Babel
 
 
 class Config:
@@ -23,8 +17,9 @@ class Config:
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
 
-# Use Config as config for the Flask app
+app = Flask(__name__)
 app.config.from_object(Config)
+babel = Babel(app)
 
 
 @babel.localeselector
