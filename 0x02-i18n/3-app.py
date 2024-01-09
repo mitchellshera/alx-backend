@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """
 This module contains a Flask app with Flask-Babel integration,
 language selection, and parametrized templates.
