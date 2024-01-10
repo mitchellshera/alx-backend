@@ -7,6 +7,15 @@ language selection, parametrized templates, and user login emulation.
 from flask import Flask, render_template, request, g
 from flask_babel import Babel, _
 
+users = {
+    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
+    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
+    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
+    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
+}
+
+app = Flask(__name__)
+babel = Babel(app)
 
 class Config:
     """
@@ -16,35 +25,34 @@ class Config:
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
-
-app = Flask(__name__)
+# Use Config as config for the Flask app
 app.config.from_object(Config)
-babel = Babel(app)
 
+@babel.localeselector
+def get_locale():
+    """
+    Determine the best-matching language from the supported languages.
 
-users = {
-    1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
-    2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
-    3: {"name": "Spock", "locale": "kg", "timezone": "Vulcan"},
-    4: {"name": "Teletubby", "locale": None, "timezone": "Europe/London"},
-}
+    Returns:
+        str: Best-matching language code.
+    """
+    forced_locale = request.args.get('locale')
+    if forced_locale and forced_locale in app.config['LANGUAGES']:
+        return forced_locale
 
+    return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 def get_user():
     """
     Get user details based on user ID.
 
-    Args:
-        user_id (int): User ID.
-
     Returns:
         dict: User details or None if not found.
     """
-    id = request.args.get('login_as', None)
-    if id is not None and int(id) in users.keys():
-        return users.get(int(id))
+    user_id = request.args.get('login_as', None)
+    if user_id is not None and int(user_id) in users.keys():
+        return users.get(int(user_id))
     return None
-
 
 @app.before_request
 def before_request():
@@ -55,22 +63,6 @@ def before_request():
     user = get_user()
     g.user = user
 
-
-@babel.localeselector
-def get_locale():
-    """
-    Determine the best-matching language from the supported languages.
-
-    Returns:
-        str: Best-matching language code.
-    """
-    locale = request.args.get('locale')
-    if locale in app.config['LANGUAGES']:
-        return locale
-
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
-
-
 @app.route('/', strict_slashes=False)
 def index() -> str:
     """
@@ -80,7 +72,6 @@ def index() -> str:
         str: Rendered HTML content.
     """
     return render_template('5-index.html')
-
 
 if __name__ == '__main__':
     app.run(port="5000", host="0.0.0.0", debug=True)
