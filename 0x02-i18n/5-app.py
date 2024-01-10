@@ -17,6 +17,7 @@ users = {
 app = Flask(__name__)
 babel = Babel(app)
 
+
 class Config:
     """
     Configuration class for Flask app.
@@ -25,8 +26,10 @@ class Config:
     BABEL_DEFAULT_LOCALE = 'en'
     BABEL_DEFAULT_TIMEZONE = 'UTC'
 
+
 # Use Config as config for the Flask app
 app.config.from_object(Config)
+
 
 @babel.localeselector
 def get_locale():
@@ -42,6 +45,7 @@ def get_locale():
 
     return request.accept_languages.best_match(app.config['LANGUAGES'])
 
+
 def get_user():
     """
     Get user details based on user ID.
@@ -54,6 +58,7 @@ def get_user():
         return users.get(int(user_id))
     return None
 
+
 @app.before_request
 def before_request():
     """
@@ -62,6 +67,7 @@ def before_request():
     """
     user = get_user()
     g.user = user
+
 
 @app.route('/', strict_slashes=False)
 def index() -> str:
@@ -72,6 +78,7 @@ def index() -> str:
         str: Rendered HTML content.
     """
     return render_template('5-index.html', user=g.user)
+
 
 if __name__ == '__main__':
     app.run(port="5000", host="0.0.0.0", debug=True)
