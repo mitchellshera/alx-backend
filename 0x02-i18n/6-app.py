@@ -5,7 +5,7 @@ language selection, parametrized templates, and user login emulation.
 """
 
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, _
+from flask_babel import Babel
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -43,7 +43,8 @@ def get_locale():
         return forced_locale
 
     # 2. Locale from user settings (if the user is logged in)
-    if g.user and 'locale' in g.user and g.user['locale'] in app.config['LANGUAGES']:
+    if g.user and 'locale' in g.user and g.user[
+            'locale'] in app.config['LANGUAGES']:
         return g.user['locale']
 
     # 3. Locale from request header
