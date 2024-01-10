@@ -71,7 +71,7 @@ def index() -> str:
     Returns:
         str: Rendered HTML content.
     """
-    return render_template('5-index.html')
+    return render_template('5-index.html', user=g.user)
 
 if __name__ == '__main__':
     app.run(port="5000", host="0.0.0.0", debug=True)
