@@ -6,7 +6,7 @@ and time zone selection.
 """
 
 from flask import Flask, render_template, request, g
-from flask_babel import Babel, _
+from flask_babel import Babel
 
 import pytz
 
